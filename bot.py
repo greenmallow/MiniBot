@@ -1,3 +1,5 @@
+import random
+
 import discord
 
 from secrets import BOT_TOKEN
@@ -5,7 +7,7 @@ from secrets import BOT_TOKEN
 
 BOT_NAME = 'MiniBot' # Bot's name in sent messages
 PREFIX = '$$' # The prefix bot commands will start with
-COMMANDS = ('config', 'help', 'ping', 'settings')
+COMMANDS = ('8ball', 'config', 'help', 'ping', 'settings')
 
 # default settings, which can be adjusted via $$config
 settings = {'dad_on': True}
@@ -50,6 +52,14 @@ async def on_message(message):
                     await message.channel.send(adjust_settings(arguments))
                 else:
                     await message.channel.send(f'Usage: `{PREFIX}config [setting] ["on"/"off"]`')
+
+            elif command == '8ball':
+                # Get a random answer to a yes-or-no questions
+                ball_answers = ['Yes', 'Certainly', 'Definitely', 'It appears so',
+                                'Maybe', 'Possibly', 'I am unsure',
+                                'No', 'Certainly not', 'Nope', 'Definitely not']
+
+                await message.channel.send(random.choice(ball_answers) + '.')
 
             elif command == 'ping':
                 # Reply to ping with "Pong!"
