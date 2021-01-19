@@ -5,7 +5,7 @@ from secrets import BOT_TOKEN
 
 BOT_NAME = 'MiniBot' # Bot's name in sent messages
 PREFIX = '$$' # The prefix bot commands will start with
-COMMANDS = ('config', 'help', 'ping')
+COMMANDS = ('config', 'help', 'ping', 'settings')
 
 # default settings, which can be adjusted via $$config
 settings = {'dad_on': True}
@@ -54,6 +54,10 @@ async def on_message(message):
             elif command == 'ping':
                 # Reply to ping with "Pong!"
                 await message.channel.send('Pong!')
+
+            elif command == 'settings':
+                # View all of the current settings
+                await message.channel.send(f'`{settings}`')
 
             else:
                 await message.channel.send(f"Sorry, I don't recognise the command `{command}`.")
