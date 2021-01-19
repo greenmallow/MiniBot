@@ -3,7 +3,7 @@ import discord
 from secrets import BOT_TOKEN
 
 
-BOT_NAME = 'Minimally Entertaining Bot' # Bot's name in sent messages
+BOT_NAME = 'MiniBot' # Bot's name in sent messages
 PREFIX = '$$' # The prefix bot commands will start with
 COMMANDS = ('help',)
 
@@ -37,6 +37,8 @@ async def on_message(message):
                 response = f"{preamble}\n`{str(COMMANDS)[1:-1]}`"
                     
                 await message.channel.send(response)
+            else:
+                await message.channel.send(f"Sorry, I don't recognise the command `{command}`.")
 
     elif message.content.lower().startswith("i'm "):
         # Implements the "Hi hungry, I'm Dad" style joke
