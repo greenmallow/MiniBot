@@ -5,7 +5,7 @@ from secrets import BOT_TOKEN
 
 BOT_NAME = 'MiniBot' # Bot's name in sent messages
 PREFIX = '$$' # The prefix bot commands will start with
-COMMANDS = ('help',)
+COMMANDS = ('help', 'ping')
 
 client = discord.Client()
 
@@ -28,7 +28,7 @@ async def on_message(message):
         tokens = msg.split()
 
         if len(tokens) > 0:
-            command = tokens[0]
+            command = tokens[0].lower()
             arguments = tokens[1:]
 
             if command == 'help':
@@ -37,6 +37,11 @@ async def on_message(message):
                 response = f"{preamble}\n`{str(COMMANDS)[1:-1]}`"
                     
                 await message.channel.send(response)
+                
+            elif command == 'ping':
+                # Replies to ping with "Pong!"
+                await message.channel.send('Pong!')
+
             else:
                 await message.channel.send(f"Sorry, I don't recognise the command `{command}`.")
 
