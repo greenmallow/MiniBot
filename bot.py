@@ -19,20 +19,23 @@ async def on_ready():
     print(f'Logged in as {client.user}')
     print('Press CTRL-C to stop.')
 
+    await client.change_presence(activity = discord.Game(name = '$$help'))
 
-# Currently disabled due to the commands not being called if this
-# function is implemented
 
-# @client.event
-# async def on_message(message):
-#     # Ignore the message if it was sent by the bot
-#     if message.author == client.user:
-#         return
+@client.listen('on_message')
+async def check_for_dad_joke(message):
+    """
+    Responds to messages begininning with "I'm x..." with "Hi x, I'm
+    BOT_NAME!"
+    """
+    # Ignore the message if it was sent by the bot
+    if message.author == client.user:
+        return
 
-#     if message.content.lower().startswith("i'm ") and bot_settings['dad_on']:
-#         # Implements the "Hi hungry, I'm Dad" style joke
-#         iam = message.content[len("I'm "):]
-#         await message.channel.send(f"Hi {iam}, I'm {BOT_NAME}!")
+    if message.content.lower().startswith("i'm ") and bot_settings['dad_on']:
+        # Implements the "Hi hungry, I'm Dad" style joke
+        iam = message.content[len("I'm "):]
+        await message.channel.send(f"Hi {iam}, I'm {BOT_NAME}!")
 
 
 @client.command(brief = 'Used to adjust settings')
@@ -50,7 +53,7 @@ async def config(ctx, *args):
 
 @client.command(name = '8ball', brief = 'Gives an answer to yes-or-no questions')
 async def eight_ball(ctx):
-    # Gives a random answer to yes-or-no questions
+    # Gives a randomly chosen answer to yes-or-no questions
     ball_answers = ['Yes', 'Certainly', 'Definitely', 'It appears so',
                     'Maybe', 'Possibly', 'I am unsure',
                     'No', 'Certainly not', 'Nope', 'Definitely not']
