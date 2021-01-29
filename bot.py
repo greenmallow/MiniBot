@@ -1,18 +1,18 @@
 import random
 
 import discord
+from discord.ext import commands
 
 from bot_secrets import BOT_TOKEN
 
-
 BOT_NAME = 'MiniBot' # Bot's name in sent messages
 PREFIX = '$$' # The prefix bot commands will start with
-COMMANDS = ('8ball', 'config', 'help', 'ping', 'settings')
+COMMANDS = ('8ball', 'commands', 'config', 'ping', 'settings')
 
-# default settings, which can be adjusted via $$config
-settings = {'dad_on': True}
+# Default settings, which can be adjusted via $$config
+bot_settings = {'dad_on': True}
 
-client = discord.Client()
+client = commands.Bot(command_prefix = PREFIX)
 
 
 @client.event
@@ -21,62 +21,63 @@ async def on_ready():
     print('Press CTRL-C to stop.')
 
 
-@client.event
-async def on_message(message):
-    # Ignore the message if it was sent by the bot
-    if message.author == client.user:
-        return
+# Currently disabled due to the commands not being called if this
+# function is implemented
 
-    # Commands beginning with the chosen prefix
-    if message.content.startswith(PREFIX):
-        # msg represents the message with the prefix removed
-        msg = message.content[len(PREFIX):]
-        tokens = msg.split()
+# @client.event
+# async def on_message(message):
+#     # Ignore the message if it was sent by the bot
+#     if message.author == client.user:
+#         return
 
-        if len(tokens) > 0:
-            command = tokens[0].lower()
-            arguments = tokens[1:]
+#     if message.content.lower().startswith("i'm ") and bot_settings['dad_on']:
+#         # Implements the "Hi hungry, I'm Dad" style joke
+#         iam = message.content[len("I'm "):]
+#         await message.channel.send(f"Hi {iam}, I'm {BOT_NAME}!")
 
-            if command == 'help':
-                # Send a list of all available commands
-                preamble = f"The following commands are available. (All commands are prefixed with '{PREFIX}')"
-                response = f"{preamble}\n`{str(COMMANDS)[1:-1]}`"
-                    
-                await message.channel.send(response)
 
-            elif command == 'config':
-                # Adjust the bot's settings
+@client.command(brief = 'Shows a list of all available commands')
+async def commands(ctx):
+    # Send a list of all available commands
+    preamble = f"The following commands are available. (All commands are prefixed with '{PREFIX}')"
+    response = f"{preamble}\n`{str(COMMANDS)[1:-1]}`"
+        
+    await ctx.send(response)
 
-                # This command expects arguments, so it sends a usage
-                # message if none are provided
-                if len(arguments) > 0:
-                    await message.channel.send(adjust_settings(arguments))
-                else:
-                    await message.channel.send(f'Usage: `{PREFIX}config [setting] ["on"/"off"]`')
 
-            elif command == '8ball':
-                # Get a random answer to a yes-or-no questions
-                ball_answers = ['Yes', 'Certainly', 'Definitely', 'It appears so',
-                                'Maybe', 'Possibly', 'I am unsure',
-                                'No', 'Certainly not', 'Nope', 'Definitely not']
+@client.command(brief = 'Used to adjust settings')
+async def config(ctx, *args):
+    """
+    Adjust the bot's settings. This command expects arguments, so it
+    sends a usage message if none are provided
+    """
 
-                await message.channel.send(random.choice(ball_answers) + '.')
+    if len(args) > 0:
+        await ctx.send(adjust_settings(args))
+    else:
+        await ctx.send(f'Usage: `{PREFIX}config [setting] ["on"/"off"]`')
 
-            elif command == 'ping':
-                # Reply to ping with "Pong!"
-                await message.channel.send('Pong!')
 
-            elif command == 'settings':
-                # View all of the current settings
-                await message.channel.send(f'`{settings}`')
+@client.command(name = '8ball', brief = 'Gives an answer to yes-or-no questions')
+async def eight_ball(ctx):
+    # Gives a random answer to yes-or-no questions
+    ball_answers = ['Yes', 'Certainly', 'Definitely', 'It appears so',
+                    'Maybe', 'Possibly', 'I am unsure',
+                    'No', 'Certainly not', 'Nope', 'Definitely not']
 
-            else:
-                await message.channel.send(f"Sorry, I don't recognise the command `{command}`.")
+    await ctx.send(random.choice(ball_answers) + '.')
 
-    elif message.content.lower().startswith("i'm ") and settings['dad_on']:
-        # Implements the "Hi hungry, I'm Dad" style joke
-        iam = message.content[len("I'm "):]
-        await message.channel.send(f"Hi {iam}, I'm {BOT_NAME}!")
+
+@client.command(brief = 'Replies to ping with "Pong!"')
+async def ping(ctx):
+    # Reply to ping with 'Pong!'
+    await ctx.send('Pong!')
+
+
+@client.command(brief = "Shows the state of the bot's settings")
+async def settings(ctx):
+    # View all of the current settings
+    await ctx.send(f'`{bot_settings}`')
 
 
 def adjust_settings(arguments):
@@ -91,14 +92,14 @@ def adjust_settings(arguments):
         # Expects a parameter "on" or "off"
         if len(parameters) >= 1:
             if parameters[0].lower() == "on":
-                settings['dad_on'] = True
+                bot_settings['dad_on'] = True
             elif parameters[0].lower() == "off":
-                settings['dad_on'] = False
+                bot_settings['dad_on'] = False
             else:
                 return f'Usage: `{PREFIX}config dad_on ["on"/"off"]`'
             
             # Setting was successfully set
-            return f"Setting 'dad_on' was set to `{settings['dad_on']}`"
+            return f"Setting 'dad_on' was set to `{bot_settings['dad_on']}`"
 
         else:
             # No parameters provided.
@@ -107,5 +108,5 @@ def adjust_settings(arguments):
         return f"Sorry, I don't recognise the setting `{setting}`."
 
 
-# Run the bot using the token from secrets.py
+# Run the bot using the token from bot_secrets.py
 client.run(BOT_TOKEN)
