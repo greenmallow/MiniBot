@@ -2,7 +2,7 @@ import random
 
 import discord
 
-from secrets import BOT_TOKEN
+from bot_secrets import BOT_TOKEN
 
 
 BOT_NAME = 'MiniBot' # Bot's name in sent messages
@@ -18,6 +18,7 @@ client = discord.Client()
 @client.event
 async def on_ready():
     print(f'Logged in as {client.user}')
+    print('Press CTRL-C to stop.')
 
 
 @client.event
