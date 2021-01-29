@@ -7,7 +7,6 @@ from bot_secrets import BOT_TOKEN
 
 BOT_NAME = 'MiniBot' # Bot's name in sent messages
 PREFIX = '$$' # The prefix bot commands will start with
-COMMANDS = ('8ball', 'commands', 'config', 'ping', 'settings')
 
 # Default settings, which can be adjusted via $$config
 bot_settings = {'dad_on': True}
@@ -36,15 +35,6 @@ async def on_ready():
 #         await message.channel.send(f"Hi {iam}, I'm {BOT_NAME}!")
 
 
-@client.command(brief = 'Shows a list of all available commands')
-async def commands(ctx):
-    # Send a list of all available commands
-    preamble = f"The following commands are available. (All commands are prefixed with '{PREFIX}')"
-    response = f"{preamble}\n`{str(COMMANDS)[1:-1]}`"
-        
-    await ctx.send(response)
-
-
 @client.command(brief = 'Used to adjust settings')
 async def config(ctx, *args):
     """
@@ -65,6 +55,7 @@ async def eight_ball(ctx):
                     'Maybe', 'Possibly', 'I am unsure',
                     'No', 'Certainly not', 'Nope', 'Definitely not']
 
+    await ctx.message.add_reaction('🔮')
     await ctx.send(random.choice(ball_answers) + '.')
 
 
