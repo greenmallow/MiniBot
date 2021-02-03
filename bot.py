@@ -51,6 +51,28 @@ async def config(ctx, *args):
         await ctx.send(f'Usage: `{PREFIX}config [setting] ["on"/"off"]`')
 
 
+@client.command(brief = 'Rolls a dice')
+async def dice(ctx, sides = '6'):
+    # Rolls a dice of with the given number of sides.
+    usage_message = f'Usage: `{PREFIX}dice [number of sides]`\nThe default number of sides is 6.'
+
+    # Attempt to convert sides to int
+    try:
+        sides = int(sides)
+    except ValueError:
+        # An invalid argument was provided.
+        await ctx.send(usage_message)
+        return
+    
+    # Validate number of sides
+    if sides <= 0:
+        await ctx.send(usage_message)
+        return
+
+    # Roll the dice
+    await ctx.send(f'A **{random.randint(1, sides)}** was rolled.')
+
+
 @client.command(name = '8ball', brief = 'Gives an answer to yes-or-no questions')
 async def eight_ball(ctx):
     # Gives a randomly chosen answer to yes-or-no questions
