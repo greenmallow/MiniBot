@@ -5,8 +5,8 @@ from discord.ext import commands
 
 from bot_secrets import BOT_TOKEN
 
-BOT_NAME = 'MiniBot' # Bot's name in sent messages
-PREFIX = '$$' # The prefix bot commands will start with
+BOT_NAME = 'MiniBot' # The bot's name in sent messages
+PREFIX = '$$' # The prefix bot commands will start with (e.g. $$help)
 
 # Default settings, which can be adjusted via $$config
 bot_settings = {'dad_on': True}
@@ -19,7 +19,7 @@ async def on_ready():
     print(f'Logged in as {client.user}')
     print('Press CTRL-C to stop.')
 
-    await client.change_presence(activity = discord.Game(name = '$$help'))
+    await client.change_presence(activity = discord.Game(name = f'{PREFIX}help'))
 
 
 @client.listen('on_message')
@@ -44,7 +44,6 @@ async def config(ctx, *args):
     Adjust the bot's settings. This command expects arguments, so it
     sends a usage message if none are provided
     """
-
     if len(args) > 0:
         await ctx.send(adjust_settings(args))
     else:
@@ -53,10 +52,10 @@ async def config(ctx, *args):
 
 @client.command(brief = 'Rolls a dice')
 async def dice(ctx, sides = '6'):
-    # Rolls a dice of with the given number of sides.
+    """Roll a dice of with the given number of sides."""
     usage_message = f'Usage: `{PREFIX}dice [number of sides]`\nThe default number of sides is 6.'
 
-    # Attempt to convert sides to int
+    # Attempt to convert sides to an int
     try:
         sides = int(sides)
     except ValueError:
@@ -75,7 +74,7 @@ async def dice(ctx, sides = '6'):
 
 @client.command(name = '8ball', brief = 'Gives an answer to yes-or-no questions')
 async def eight_ball(ctx):
-    # Gives a randomly chosen answer to yes-or-no questions
+    """Give a randomly chosen answer to yes-or-no questions"""
     ball_answers = ['Yes', 'Certainly', 'Definitely', 'It appears so',
                     'Maybe', 'Possibly', 'I am unsure',
                     'No', 'Certainly not', 'Nope', 'Definitely not']
@@ -86,13 +85,13 @@ async def eight_ball(ctx):
 
 @client.command(brief = 'Replies to ping with "Pong!"')
 async def ping(ctx):
-    # Reply to ping with 'Pong!'
+    """Reply to ping with 'Pong!'"""
     await ctx.send('Pong!')
 
 
 @client.command(brief = "Shows the state of the bot's settings")
 async def settings(ctx):
-    # View all of the current settings
+    """View all of the current settings"""
     await ctx.send(f'`{bot_settings}`')
 
 
