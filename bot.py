@@ -1,4 +1,5 @@
 import random
+import time
 
 import discord
 from discord.ext import commands
@@ -16,8 +17,10 @@ client = commands.Bot(command_prefix = PREFIX)
 
 @client.event
 async def on_ready():
+    # Print useful information to the console
     print(f'Logged in as {client.user}')
-    print('Press CTRL-C to stop.')
+    print(f'The current time is: {time.asctime()}')
+    print('Press CTRL-C to stop.', end = '\n\n')
 
     await client.change_presence(activity = discord.Game(name = f'{PREFIX}help'))
 
