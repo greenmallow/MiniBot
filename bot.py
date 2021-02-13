@@ -86,6 +86,12 @@ async def eight_ball(ctx):
     await ctx.send(random.choice(ball_answers) + '.')
 
 
+@client.command(name = 'coin', aliases = ['coinflip', 'flip', 'flipcoin'], brief = 'Flips a coin')
+async def flip_coin(ctx):
+    """Flip a coin"""
+    await ctx.send(f"It's **{random.choice(['Heads', 'Tails'])}**.")
+
+
 @client.command(brief = 'Replies to ping with "Pong!"')
 async def ping(ctx):
     """Reply to ping with 'Pong!'"""
